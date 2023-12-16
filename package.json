@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Création d'un framework en Node native inspiré de Laravel",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
@@ -11,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",
+    "http": "^0.0.1-security",
     "nodemon": "^3.0.2",
     "pg": "^8.11.3"
   }
