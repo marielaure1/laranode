@@ -1,23 +1,62 @@
-import Router from "./Router.js"
+import Router from "../bootstrap/RouterMethods.js";
+import UserController from "../app/Controllers/UserController.js";
 
 const routes = new Router()
+const userController = new UserController();
 
-routes.get("/", (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.write("Hello from GET /");
-  res.end();
+routes.get("/users", async (req, res) => {
+  try {
+    await userController.all(req, res);
+  } catch (error) {
+    console.error("Error:", error);
+    res.writeHead(500, { "Content-type": "text/plain" });
+    res.write("Internal Server Error");
+    res.end();
+  }
 });
 
-routes.post("/", (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.write("Hello from POST /");
-  res.end();
+routes.post("/users", async (req, res) => {
+  try {
+    await userController.create(req, res);
+  } catch (error) {
+    console.error("Error:", error);
+    res.writeHead(500, { "Content-type": "application/json" });
+    res.write("Internal Server Error");
+    res.end();
+  }
 });
 
-routes.get("/users", (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.write("Hello from GET /users");
-  res.end();
+routes.get("/users/:id", async (req, res) => {
+  try {
+    await userController.get(req, res); 
+  } catch (error) {
+    console.error("Error:", error);
+    res.writeHead(500, { "Content-type": "text/plain" });
+    res.write("Internal Server Error");
+    res.end();
+  }
+});
+
+routes.put("/users/:id", async (req, res) => {
+  try {
+    await userController.update(req, res); 
+  } catch (error) {
+    console.error("Error:", error);
+    res.writeHead(500, { "Content-type": "text/plain" });
+    res.write("Internal Server Error");
+    res.end();
+  }
+});
+
+routes.delete("/users/:id", async (req, res) => {
+  try {
+    await userController.delete(req, res); 
+  } catch (error) {
+    console.error("Error:", error);
+    res.writeHead(500, { "Content-type": "text/plain" });
+    res.write("Internal Server Error");
+    res.end();
+  }
 });
 
 export default routes.getRoutes();
