@@ -1,10 +1,24 @@
+/**
+ * Classe de validation des données.
+ */
 export default class Validator {
+
+  /**
+   * Constructeur de la classe Validator.
+   * @param {Object} data - Données à valider.
+   * @param {Object} customMessages - Messages d'erreur personnalisés.
+   */
     constructor(data, customMessages = {}) {
       this.data = data;
       this.customMessages = customMessages;
       this.errors = [];
     }
   
+  /**
+   * Vérifie si un champ est requis.
+   * @param {string} field - Nom du champ à vérifier.
+   * @returns {Validator} - L'instance du validateur.
+   */
     required(field) {
       if (!this.data[field]) {
         const message = this.customMessages[field] || `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
@@ -13,6 +27,11 @@ export default class Validator {
       return this;
     }
 
+  /**
+   * Vérifie si un champ est une adresse e-mail valide.
+   * @param {string} field - Nom du champ à vérifier.
+   * @returns {Validator} - L'instance du validateur.
+   */
     email(field) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -23,6 +42,12 @@ export default class Validator {
       return this;
     }
 
+    /**
+   * Vérifie si un champ est un mot de passe valide selon les conditions spécifiées.
+   * @param {string} field - Nom du champ à vérifier.
+   * @param {Object} conditions - Conditions pour le mot de passe (min, max, lowercase, uppercase, digit, symbol).
+   * @returns {Validator} - L'instance du validateur.
+   */
     password(field, conditions = {}) {
       conditions.min = conditions.min || 12;
       conditions.max = conditions.max || 20;

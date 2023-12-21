@@ -2,12 +2,24 @@ import Db from '../../bootstrap/Db.js';
 import User from '../Models/User.js';
 import Hash from '../../utils/hash.js';
 
+/**
+ * Classe représentant l'interaction entre l'application et la base de donnée avec la table user.
+ */
 export default class UserRepository {
+
+   /**
+   * Constructeur de la classe UserRepository.
+   */
   constructor() {
     this.db = new Db();
     this.hash = new Hash();
   }
 
+   /**
+   * Récupère tous les utilisateurs.
+   * @returns {Array} - Liste des utilisateurs au format JSON.
+   * @throws {Error} - En cas d'erreur lors de la récupération des utilisateurs.
+   */
   async all() {
     try {
       const query = 'SELECT * FROM users';
@@ -19,6 +31,12 @@ export default class UserRepository {
     }
   }
 
+  /**
+   * Récupère un utilisateur par son identifiant.
+   * @param {string} id - Identifiant de l'utilisateur.
+   * @returns {Object|string} - Objet JSON représentant l'utilisateur ou "Not Found" si non trouvé.
+   * @throws {Error} - En cas d'erreur lors de la récupération de l'utilisateur.
+   */
   async get(id) {
     try {
       const query = 'SELECT * FROM users WHERE id = $1';
@@ -30,6 +48,12 @@ export default class UserRepository {
     }
   }
 
+   /**
+   * Crée un nouvel utilisateur.
+   * @param {Object} data - Données de l'utilisateur à créer.
+   * @returns {Object} - Objet JSON représentant le nouvel utilisateur.
+   * @throws {Error} - En cas d'erreur lors de la création de l'utilisateur.
+   */
   async create(data) {
     try {
       await this.findByEmail(data.email);
@@ -44,6 +68,13 @@ export default class UserRepository {
     }
   }
 
+  /**
+   * Met à jour un utilisateur existant.
+   * @param {string} id - Identifiant de l'utilisateur à mettre à jour.
+   * @param {Object} data - Nouvelles données de l'utilisateur.
+   * @returns {Object|string} - Objet JSON représentant l'utilisateur mis à jour ou "Not Found" si non trouvé.
+   * @throws {Error} - En cas d'erreur lors de la mise à jour de l'utilisateur.
+   */
   async update(id, data) {
     try {
       await this.findByEmail(data.email);
@@ -58,6 +89,12 @@ export default class UserRepository {
     }
   }
 
+  /**
+   * Supprime un utilisateur par son identifiant.
+   * @param {string} id - Identifiant de l'utilisateur à supprimer.
+   * @returns {Object|string} - Objet JSON représentant l'utilisateur supprimé ou "Not Found" si non trouvé.
+   * @throws {Error} - En cas d'erreur lors de la suppression de l'utilisateur.
+   */
   async delete(id) {
     try {
       const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
@@ -69,6 +106,12 @@ export default class UserRepository {
     }
   }
 
+  /**
+   * Recherche un utilisateur par son adresse e-mail.
+   * @param {string} email - Adresse e-mail de l'utilisateur à rechercher.
+   * @returns {Object|string} - Objet JSON représentant l'utilisateur trouvé ou "Not Found" si non trouvé.
+   * @throws {Error} - En cas d'erreur lors de la recherche de l'utilisateur par e-mail.
+   */
   async findByEmail(email) {
     try {
       const query = 'SELECT * FROM users WHERE email = $1';

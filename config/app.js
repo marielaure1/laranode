@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+/**
+ * Configuration de l'application, incluant les paramètres de la base de données.
+ */
 export default {
     database: {
       user: process.env.DB_USER || 'votre_utilisateur',

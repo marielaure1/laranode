@@ -1,7 +1,17 @@
+/**
+ * Classe de base pour les contrôleurs dans le framework.
+ */
 export default class Controller {
+
+  /**
+   * Constructeur de la classe Controller.
+   * @param {string} tableName - Nom de la table associée au contrôleur.
+   * @param {Object} repository - Instance du repository associé au contrôleur.
+   * @param {Function} validator - Fonction de validation associée au contrôleur.
+   */
   constructor(tableName, repository, validator) {
     if (new.target === Controller) {
-      throw new TypeError('Cannot instantiate BaseController directly.');
+      throw new TypeError('Error Controller.');
     }
 
     this.tableName = tableName;
@@ -9,6 +19,11 @@ export default class Controller {
     this.validator = validator;
   }
 
+  /**
+   * Méthode pour récupérer toutes les données d'une table.
+   * @param {Object} request - Objet de la requête HTTP.
+   * @param {Object} response - Objet de la réponse HTTP.
+   */
   async all(request, response) {
     try {
       const data = await this.repository.all();
@@ -22,6 +37,12 @@ export default class Controller {
       response.end();
     }
   }
+
+  /**
+   * Méthode pour récupérer une donnée par son identifiant.
+   * @param {Object} request - Objet de la requête HTTP.
+   * @param {Object} response - Objet de la réponse HTTP.
+   */
 
   async get(request, response) {
     try {
@@ -52,6 +73,11 @@ export default class Controller {
     }
   }
 
+   /**
+   * Méthode pour créer une nouvelle donnée.
+   * @param {Object} request - Objet de la requête HTTP.
+   * @param {Object} response - Objet de la réponse HTTP.
+   */
   async create(request, response) {
     try {
       const createdData = request.body;
@@ -84,6 +110,11 @@ export default class Controller {
     }
   }
 
+  /**
+   * Méthode pour mettre à jour une donnée existante.
+   * @param {Object} request - Objet de la requête HTTP.
+   * @param {Object} response - Objet de la réponse HTTP.
+   */
   async update(request, response) {
     try {
       const id = request.params.id;
@@ -127,6 +158,11 @@ export default class Controller {
     }
   }
 
+  /**
+   * Méthode pour supprimer une donnée par son identifiant.
+   * @param {Object} request - Objet de la requête HTTP.
+   * @param {Object} response - Objet de la réponse HTTP.
+   */
   async delete(request, response) {
     try {
       const id = request.params.id;

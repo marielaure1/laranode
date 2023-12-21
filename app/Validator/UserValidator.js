@@ -1,11 +1,23 @@
 import Validator from "./Validator.js";
 
+/**
+ * Classe de validation spécifique pour la table user.
+ */
 export default class UserValidator extends Validator {
+
+   /**
+   * Constructeur de la classe UserValidator.
+   * @param {Object} data - Données à valider.
+   */
     constructor(data) {
         super();
         this.data = data;
     }
-      
+
+   /**
+   * Valide la création d'un utilisateur.
+   * @returns {Object} - Résultat de la validation (erreurs et code HTTP).
+   */
     validateCreate() {
         this.required("name")
         .required("email")

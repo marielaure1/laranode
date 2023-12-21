@@ -1,6 +1,11 @@
 import routes from "../routes/routes.js";
 import bodyParser from "../utils/BodyParser.js";
 
+/**
+ * Fonction pour gérer les routes et les requêtes HTTP.
+ * @param {Object} req - Objet représentant la requête HTTP.
+ * @param {Object} res - Objet représentant la réponse HTTP.
+ */
 export default async function router(req, res) {
 
   const url = req.url;

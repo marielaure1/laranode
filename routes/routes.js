@@ -1,6 +1,9 @@
 import Router from "../bootstrap/RouterMethods.js";
 import UserController from "../app/Controllers/UserController.js";
 
+/**
+ * Configuration des routes de l'application.
+ */
 const routes = new Router()
 const userController = new UserController();
 
