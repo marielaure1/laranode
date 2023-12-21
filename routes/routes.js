@@ -20,7 +20,7 @@ routes.post("/users", async (req, res) => {
     await userController.create(req, res);
   } catch (error) {
     console.error("Error:", error);
-    res.writeHead(500, { "Content-type": "application/json" });
+    res.writeHead(500, { "Content-type": "text/plain" });
     res.write("Internal Server Error");
     res.end();
   }
@@ -47,6 +47,7 @@ routes.put("/users/:id", async (req, res) => {
     res.end();
   }
 });
+
 
 routes.delete("/users/:id", async (req, res) => {
   try {

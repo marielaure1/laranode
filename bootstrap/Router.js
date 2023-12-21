@@ -47,7 +47,16 @@ export default async function router(req, res) {
     
     isRouteExist.handler(req, res);
   } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Not Found");
+    const allowedMethods = routes
+      .filter((route) => route.path === url)
+      .map((route) => route.method);
+
+    if (allowedMethods.length > 0) {
+      res.writeHead(405, { "Content-Type": "text/plain", "Allow": allowedMethods.join(", ") });
+      res.end("Method Not Allowed");
+    } else {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("Route Not Found");
+    }
   }
 }

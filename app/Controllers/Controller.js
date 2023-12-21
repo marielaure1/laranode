@@ -1,11 +1,12 @@
 export default class Controller {
-  constructor(tableName, repository) {
+  constructor(tableName, repository, validator) {
     if (new.target === Controller) {
       throw new TypeError('Cannot instantiate BaseController directly.');
     }
 
     this.tableName = tableName;
     this.repository = repository;
+    this.validator = validator;
   }
 
   async all(request, response) {
@@ -55,6 +56,13 @@ export default class Controller {
     try {
       const createdData = request.body;
 
+      const entityValidator = this.validator(createdData);
+      const createErrors = entityValidator.validateCreate();
+
+      if(createErrors.code == 422){
+        throw Error("Unprocessable Entity");
+      }
+
       const data = await this.repository.create(createdData);
   
       response.writeHead(201, { 'Content-Type': 'application/json' });
@@ -62,8 +70,16 @@ export default class Controller {
       response.end();
     } catch (err) {
       console.error(err);
-      response.writeHead(500, { 'Content-type': 'text/plain' });
-      response.write('Internal Server Error');
+      let writeHead = 500;
+      let write = "Internal Server Error";
+
+      if(err.message == "Unprocessable Entity"){
+        writeHead = 422;
+        write = "Unprocessable Entity";
+      }
+
+      response.writeHead(writeHead, { 'Content-type': 'text/plain' });
+      response.write(write);
       response.end();
     }
   }
@@ -72,6 +88,13 @@ export default class Controller {
     try {
       const id = request.params.id;
       const updatedData = request.body;
+
+      const entityValidator = this.validator(updatedData);
+      const updateErrors = entityValidator.validateCreate();
+
+      if(updateErrors.code == 422){
+        throw Error("Unprocessable Entity");
+      }
 
       const data = await this.repository.update(id, updatedData);
   
@@ -91,6 +114,11 @@ export default class Controller {
       if(err.message == "Not Found"){
         writeHead = 404;
         write = "Not Found";
+      }
+
+      if(err.message == "Unprocessable Entity"){
+        writeHead = 422;
+        write = "Unprocessable Entity";
       }
 
       response.writeHead(writeHead, { 'Content-type': 'text/plain' });

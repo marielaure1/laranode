@@ -7,18 +7,18 @@ export default class UserValidator extends Validator {
     }
       
     validateCreate() {
-        this.required("name", "Name")
-        .required("email", "Email")
-        .required("password", "Password");
+        this.required("name")
+        .required("email")
+        .required("password")
+        .email("email")
+        .password("password");
 
-        return this.errors;
-    }
+        this.code = 201;
 
-    validateUpdate() {
-        this.required("name", "Name")
-        .required("email", "Email")
-        .required("password", "Password");
+        if (this.errors.length > 0) {
+            this.code = 422; 
+        }
 
-        return this.errors;
+        return {errors: this.errors, code: this.code};
     }
 }
