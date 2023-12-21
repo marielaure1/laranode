@@ -89,6 +89,12 @@ export default class Controller {
         throw Error("Unprocessable Entity");
       }
 
+      const isExist = await this.repository.findByEmail(createdData.email);
+
+      if(isExist){
+        throw Error("Conflict");
+      }
+
       const data = await this.repository.create(createdData);
   
       response.writeHead(201, { 'Content-Type': 'application/json' });
@@ -102,6 +108,11 @@ export default class Controller {
       if(err.message == "Unprocessable Entity"){
         writeHead = 422;
         write = "Unprocessable Entity";
+      }
+
+      if(err.message == "Conflict"){
+        writeHead = 409;
+        write = "Conflict";
       }
 
       response.writeHead(writeHead, { 'Content-type': 'text/plain' });

@@ -56,7 +56,6 @@ export default class UserRepository {
    */
   async create(data) {
     try {
-      await this.findByEmail(data.email);
       const passwordHash = await this.hash.hashData(data.password);
       const query = 'INSERT INTO users (name, email, created_at, updated_at, password) VALUES ($1, $2, $3, $4, $5) RETURNING *';
       const values = [data.name, data.email, new Date(), new Date(), passwordHash];
@@ -77,7 +76,6 @@ export default class UserRepository {
    */
   async update(id, data) {
     try {
-      await this.findByEmail(data.email);
       const passwordHash = await this.hash.hashData(data.password);
       const query = 'UPDATE users SET name = $1, email = $2, updated_at = $3, password = $4 WHERE id = $5 RETURNING *';
       const values = [data.name, data.email, new Date(), passwordHash, id];
