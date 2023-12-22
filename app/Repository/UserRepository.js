@@ -110,14 +110,18 @@ export default class UserRepository {
    * @returns {Object|string} - Objet JSON représentant l'utilisateur trouvé ou "Not Found" si non trouvé.
    * @throws {Error} - En cas d'erreur lors de la recherche de l'utilisateur par e-mail.
    */
-  async findByEmail(email) {
+  async findByUnique(uniqueData) {
     try {
-      const query = 'SELECT * FROM users WHERE email = $1';
-      const response = await this.db.execute(query, [email]);
+
+      const filters = Object.keys(uniqueData).map((field, index) => `${field} = $${index + 1}`).join(' AND ');
+      const query = `SELECT * FROM users WHERE ${filters}`;
+      const fieldsArray = Object.values(uniqueData);
+      const response = await this.db.execute(query, fieldsArray);
+
       return response.rows.length > 0 ? new User(response.rows[0]).toJSON() : "Not Found";
     } catch (error) {
       console.error(error);
-      throw new Error('Error finding user by email.');
+      throw new Error('Error finding user.');
     }
   }
 }

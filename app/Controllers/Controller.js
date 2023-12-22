@@ -78,7 +78,7 @@ export default class Controller {
    * @param {Object} request - Objet de la requête HTTP.
    * @param {Object} response - Objet de la réponse HTTP.
    */
-  async create(request, response) {
+  async create(request, response, uniqueData) {
     try {
       const createdData = request.body;
 
@@ -86,12 +86,12 @@ export default class Controller {
       const createErrors = entityValidator.validateCreate();
 
       if(createErrors.code == 422){
-        throw Error("Unprocessable Entity");
+        throw Object.assign(new Error("Unprocessable Entity"), { errorData : createErrors });
       }
 
-      const isExist = await this.repository.findByEmail(createdData.email);
+      const isExist = await this.repository.findByUnique(uniqueData);
 
-      if(isExist){
+      if(isExist != "Not Found"){
         throw Error("Conflict");
       }
 
@@ -107,7 +107,7 @@ export default class Controller {
 
       if(err.message == "Unprocessable Entity"){
         writeHead = 422;
-        write = "Unprocessable Entity";
+        write = JSON.stringify({ errors: err.errorData.errors});
       }
 
       if(err.message == "Conflict"){
@@ -126,7 +126,7 @@ export default class Controller {
    * @param {Object} request - Objet de la requête HTTP.
    * @param {Object} response - Objet de la réponse HTTP.
    */
-  async update(request, response) {
+  async update(request, response, uniqueData) {
     try {
       const id = request.params.id;
       const updatedData = request.body;
@@ -135,7 +135,13 @@ export default class Controller {
       const updateErrors = entityValidator.validateCreate();
 
       if(updateErrors.code == 422){
-        throw Error("Unprocessable Entity");
+        throw Object.assign(new Error("Unprocessable Entity"), { errorData : updateErrors });
+      }
+
+      const isExist = await this.repository.findByUnique(uniqueData);
+
+      if(isExist != "Not Found"){
+        throw Error("Conflict");
       }
 
       const data = await this.repository.update(id, updatedData);
@@ -160,7 +166,12 @@ export default class Controller {
 
       if(err.message == "Unprocessable Entity"){
         writeHead = 422;
-        write = "Unprocessable Entity";
+        write = JSON.stringify({ errors: err.errorData.errors});
+      }
+
+      if(err.message == "Conflict"){
+        writeHead = 409;
+        write = "Conflict";
       }
 
       response.writeHead(writeHead, { 'Content-type': 'text/plain' });

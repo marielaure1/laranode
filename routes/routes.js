@@ -20,7 +20,9 @@ routes.get("/users", async (req, res) => {
 
 routes.post("/users", async (req, res) => {
   try {
-    await userController.create(req, res);
+    const { email } = req.body;
+
+    await userController.create(req, res, {email});
   } catch (error) {
     console.error("Error:", error);
     res.writeHead(500, { "Content-type": "text/plain" });
@@ -42,7 +44,9 @@ routes.get("/users/:id", async (req, res) => {
 
 routes.put("/users/:id", async (req, res) => {
   try {
-    await userController.update(req, res); 
+    const { email } = req.body;
+    
+    await userController.update(req, res, {email}); 
   } catch (error) {
     console.error("Error:", error);
     res.writeHead(500, { "Content-type": "text/plain" });
